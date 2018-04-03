@@ -12,6 +12,8 @@ This program use deep learing technology to sort the face image.
 
 ・Python 3.6 64bit
 
+・Jupyter 4.4
+
 ・Tensorflow 1.5
 
 ・Keras 2.1.5
