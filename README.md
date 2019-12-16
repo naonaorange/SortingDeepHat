@@ -10,23 +10,14 @@ This program use deep learing technology to sort the face image.
 
 "Sorting Deep Hat" run under the following environment normaly.
 
-・Python 3.6 64bit
+・Python 3.7 64bit
 
-・Jupyter 4.4
+・Tensorflow 2.0
 
-・Tensorflow 1.5
-
-・Keras 2.1.5
-
-・OpenCV 3.4
+・OpenCV 4.1.2
 
 ## Installation
 
-Please install tensorflow ver 1.5.
-
-(I dosen't check to run this program successfully under tensorflow ver 1.5.1 or ver 1.6 now.)
-
 ```sh
-pip install tensorflow==1.5
-pip install keras opencv-python matplotlib h5py pillow
+pip install tensorflow opencv-python matplotlib pillow
 ```
