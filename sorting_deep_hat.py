@@ -13,9 +13,14 @@ class sorting_deep_hat:
         self.rectangle_width = 5
         self.font = ImageFont.truetype('SourceHanSansJP-Bold.otf', self.font_size)
 
+    def release_internal_data(self):
+        if self.image is not None:
+            self.image = None
+            self.result_data = []
 
     def estimate(self, input_image_path):
         self.image = cv2.imread(input_image_path)
+
         gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         faces = self.face_cascade.detectMultiScale(gray,\
                                                     scaleFactor= 1.11,\
@@ -25,7 +30,6 @@ class sorting_deep_hat:
 
         self.result_data = []
         for (x, y, w, h) in faces:
-            
             #既に検出された顔領域内に顔が検出された場合は除外
             for (xx, yy, ww, hh) in self.result_data:
                 if xx < x and x < xx + ww:
@@ -56,7 +60,6 @@ class sorting_deep_hat:
             self.result_data.append([x, y, w, h, house_name])
     
     def draw(self, output_image_path):
-
         #MatはRGB, PIL ImageはBGRのため要素の順番を変更
         pil_image=Image.fromarray(self.image[:, :, ::-1].copy())
         pil_draw = ImageDraw.Draw(pil_image)
@@ -84,7 +87,7 @@ class sorting_deep_hat:
                 text_draw_y = 0
             pil_draw.text((x, text_draw_y), house_name, fill=color, font=self.font)
         
-        pil_image.save('a.jpg')
+        pil_image.save(output_image_path)
 
         #cv2.rectangle(self.image, (x, y), (x + w, y + h), color, 2)
         #cv2.putText(self.image, house_name, (x, y), cv2.FONT_HERSHEY_PLAIN, 2, color, 4)
@@ -99,3 +102,4 @@ if __name__ == '__main__':
     sdt.estimate(input_image_path)
     print(sdt.result_data)
     sdt.draw(output_image_path)
+    sdt.release_internal_data()
