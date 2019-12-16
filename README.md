@@ -19,5 +19,5 @@ This program use deep learing technology to sort the face image.
 ## Installation
 
 ```sh
-pip install tensorflow opencv-python matplotlib pillow
+pip install tensorflow opencv-python matplotlib pillow numpy scipy
 ```
