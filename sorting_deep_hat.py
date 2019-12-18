@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import math
 from tensorflow.keras import models
 import cv2
 import numpy as np
@@ -10,9 +11,6 @@ class sorting_deep_hat:
         self.face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
         self.model = models.load_model(model_path)
         #self.model_path = model_path
-        #self.font_size = 19
-        #self.rectangle_width = 5
-        #self.font = ImageFont.truetype('SourceHanSansJP-Bold.otf', self.font_size)
 
     def release_internal_data(self):
         if self.image is not None:
@@ -21,29 +19,30 @@ class sorting_deep_hat:
 
     def estimate(self, input_image_path):
         self.image = cv2.imread(input_image_path)
+        self.image_height, self.image_width = self.image.shape[:2]
 
         gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         faces = self.face_cascade.detectMultiScale(gray,\
                                                     scaleFactor= 1.11,\
                                                     minNeighbors= 4,\
-                                                    minSize=(self.image.shape[1] // 8, self.image.shape[0] // 8)\
+                                                    minSize=(self.image_width // 8, self.image_height // 8)\
                                                     )
 
         self.result_data = []
         for (x, y, w, h) in faces:
-            isDetectedOk = True
+            is_detected = True
             #既に検出された顔領域内に顔が検出された場合は除外
             for (xx, yy, ww, hh, hhnn) in self.result_data:
                 if xx < x and x < xx + ww:
                     if yy < y and y < yy + hh:
-                        isDetectedOk = False
+                        is_detected = False
                         break
                 if xx < x + w and x + w < xx + ww:
                     if yy < y + h and y + h < yy + hh:
-                        isDetectedOk = False
+                        is_detected = False
                         break
 
-            if isDetectedOk == True:
+            if is_detected == True:
                 face_image = self.image[y:y+h, x:x+w]
                 face_image = cv2.resize(face_image, (100, 100))
         
@@ -92,8 +91,8 @@ class sorting_deep_hat:
             #矩形の下に文字を描画、文字の背景を描画
             #font sizeの高さとのずれがあるため*1.3の領域を背景とする
             text_draw_y = y + h
-            if text_draw_y > self.image.shape[1] - font_size * 1.3:
-                text_draw_y = self.image.shape[1] - font_size * 1.3
+            if text_draw_y > math.floor(self.image_height - font_size * 1.3):
+                text_draw_y = math.floor(self.image_height - font_size * 1.3)
             pil_draw.rectangle([(x, y+h), \
                                 (x+w, text_draw_y+font_size*1.3)],\
                                 fill='white',\
